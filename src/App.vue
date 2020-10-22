@@ -1,19 +1,38 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <VueHeadful
+      :title="mainTitle"
+      description="Votre application pour maigrir sainement"
+    />
+    <Header :signedIn="Boolean(userData.id)"></Header>
+    <router-view />
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Header from "./components/Header.vue";
+import Footer from "./components/Footer.vue";
+import { mapState, mapActions } from "vuex";
+import VueHeadful from "vue-headful";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Header,
+    Footer,
+    VueHeadful,
+  },
+  methods: {
+    ...mapActions(["initUserData"]),
+  },
+  computed: {
+    ...mapState(["mainTitle", "userData"]),
+  },
+  created() {
+    this.initUserData();
+  },
+};
 </script>
 
 <style>
