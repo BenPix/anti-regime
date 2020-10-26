@@ -61,7 +61,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["toSignIn", "toCompleteTitle", "initUserData"]),
+    ...mapActions(["toSignIn", "toCompleteTitle"]),
     onSubmit() {
       this.serverError = false;
 
@@ -70,7 +70,6 @@ export default {
           this.connexionFailed = !res.data.result.success;
           if (!this.connexionFailed) {
             this.toSignIn(res.data.result.user_id);
-            this.initUserData();
             this.$router.push({ name: "dashboard" });
           }
         })

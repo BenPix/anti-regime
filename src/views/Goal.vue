@@ -183,10 +183,6 @@ export default {
       deficit: 100,
     };
   },
-  mounted() {
-    this.toCompleteTitle("Objectif");
-    this.deficit = this.perteCaloriqueMin;
-  },
   watch: {
     poids: function () {
       this.deficit = this.perteCaloriqueMin;
@@ -328,6 +324,10 @@ export default {
         between: between(100, this.perteCaloriqueMax),
       },
     };
+  },
+  mounted() {
+    this.toCompleteTitle("Objectif");
+    this.deficit = this.perteCaloriqueMin;
   },
   components: {
     GoalSynthese,

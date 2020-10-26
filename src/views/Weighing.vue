@@ -121,20 +121,21 @@ export default {
         today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + dayNumber;
     },
     onSubmit() {
-      weightUser(this.poids, this.date, this.userData.id).then(() => {
-        // on efface le formulaire, affiche le message à la place, et affiche
-        // 2 boutons, un pour revenir au tableau de bord, l'autre pour réafficher le form
-        this.messageContainer = "success";
-        this.weightSubmited = true;
-        // refresh du tableau des pesées
-        findWeighings(this.userData.id)
-          .then((res) => {
-            this.weighings = res.data.results;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      });
+      weightUser(this.poids, this.date, this.userData.id)
+        .then(() => {
+          // on efface le formulaire, affiche le message à la place, et affiche
+          // 2 boutons, un pour revenir au tableau de bord, l'autre pour réafficher le form
+          this.messageContainer = "success";
+          this.weightSubmited = true;
+          // refresh du tableau des pesées
+          return findWeighings(this.userData.id);
+        })
+        .then((res) => {
+          this.weighings = res.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     deleteRow(weigh_id, row_id) {
       deleteWeigh(weigh_id).then(() => {

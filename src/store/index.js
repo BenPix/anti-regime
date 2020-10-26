@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 import { findUser } from "../services/UserService";
 
 Vue.use(Vuex);
@@ -28,9 +29,6 @@ export default new Vuex.Store({
   },
   mutations: {
     // synchrone
-    SIGN_IN(state, id) {
-      state.userData.id = id;
-    },
     SIGN_OUT(state) {
       state.userData = {};
     },
@@ -77,17 +75,10 @@ export default new Vuex.Store({
       state.userData.goalTime = weeks;
     },
     SET_GOAL_DEFINED(state) {
-      localStorage.setItem("goalIsDefined", true);
       state.userData.goalIsDefined = true;
     },
     SET_GOAL_UNDEFINED(state) {
-      localStorage.removeItem("goalIsDefined");
       state.userData.goalIsDefined = false;
-    },
-    TO_CHECK_GOAL(state) {
-      if (localStorage.getItem("goalIsDefined")) {
-        state.userId = localStorage.getItem("userId");
-      }
     },
     ADD_TO_TITLE(state, pageTitle) {
       state.mainTitle = state.title + " | " + pageTitle;
@@ -96,17 +87,7 @@ export default new Vuex.Store({
   actions: {
     // asynchrone => appel API ici
     toSignIn(context, id) {
-      localStorage.setItem("userId", id);
-      context.commit("SIGN_IN", id);
-    },
-    toSignOut(context) {
-      localStorage.removeItem("userId");
-      context.commit("SIGN_OUT");
-    },
-    initUserData(context) {
-      // try something else than localStorage to have userId (token, session, ...)
-      if (localStorage.getItem("userId")) {
-        findUser(localStorage.getItem("userId"))
+      findUser(id)
         .then((res) => {
           context.commit("SET_USER_ID", res.data.user.id);
           context.commit("SET_USER_EMAIL", res.data.user.email);
@@ -134,8 +115,10 @@ export default new Vuex.Store({
         })
         .catch((err) => {
           console.log(err); // deal with this error
-        })
-      }
+        });
+    },
+    toSignOut(context) {
+      context.commit("SIGN_OUT");
     },
     setOrUnsetGoal(context, goalData) {
       if (goalData.goalIsDefined) {
@@ -154,5 +137,6 @@ export default new Vuex.Store({
       context.commit("ADD_TO_TITLE", pageTitle);
     },
   },
+  plugins: [createPersistedState()],
   modules: {},
 });

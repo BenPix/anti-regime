@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "../store/index";
 import Home from "../views/Home.vue";
 import SignUp from "../views/SignUp.vue";
 import SignIn from "../views/SignIn.vue";
@@ -85,7 +86,7 @@ router.beforeEach(async (to, from, next) => {
     (record) => record.meta.onlyWhenLoggedOut
   );
   // store inaccessible malgré await import(store) ou router.beforeResolve donc utilisation de localStorage
-  const loggedIn = Boolean(localStorage.getItem("userId"));
+  const loggedIn = Boolean(store.state.userData.id);
 
   if (!isPublic && !loggedIn) {
     next("/sign-in");

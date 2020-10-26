@@ -26,7 +26,7 @@
             <p>Dépense physique : {{ depenseMax }}Kcal.</p>
             <p>
               Cela équivaut à réaliser de façon quotidienne l'une des activités suivantes :
-              <ul>
+              <ul v-if="loaded">
                 <li>{{ exempleDepenseMax.marche }} minutes de <u :title="detailMarche.detail">marche</u></li>
                 <li>{{ exempleDepenseMax.course }} minutes de <u :title="detailCourse.detail">course</u></li>
                 <li>{{ exempleDepenseMax.cyclisme }} minutes de <u :title="detailCyclisme.detail">vélo</u></li>
@@ -42,7 +42,7 @@
             <p>Dépense physique : {{ depenseMin }}Kcal.</p>
             <p v-if="depenseMin > 0">
               Cela équivaut à réaliser de façon quotidienne l'une des activités suivantes :
-              <ul>
+              <ul v-if="loaded">
                 <li>{{ exempleDepenseMin.marche }} minutes de <u :title="detailMarche.detail">marche</u></li>
                 <li>{{ exempleDepenseMin.course }} minutes de <u :title="detailCourse.detail">course</u></li>
                 <li>{{ exempleDepenseMin.cyclisme }} minutes de <u :title="detailCyclisme.detail">vélo</u></li>
@@ -61,7 +61,7 @@
             <p>Dépense physique : {{ depenseMix }}Kcal.</p>
             <p>
               Cela équivaut à réaliser de façon quotidienne l'une des activités suivantes :
-              <ul>
+              <ul v-if="loaded">
                 <li>{{ exempleDepenseMix.marche }} minutes de <u :title="detailMarche.detail">marche</u></li>
                 <li>{{ exempleDepenseMix.course }} minutes de <u :title="detailCourse.detail">course</u></li>
                 <li>{{ exempleDepenseMix.cyclisme }} minutes de <u :title="detailCyclisme.detail">vélo</u></li>
@@ -98,6 +98,7 @@ export default {
   data() {
     return {
       sportDepenseListe: [],
+      loaded: false,
     };
   },
   props: {
@@ -203,9 +204,11 @@ export default {
     },
   },
   created() {
+    this.loaded = false;
     readSportDepenseForExamples()
       .then((result) => {
         this.sportDepenseListe = result.data.results;
+        this.loaded = true;
       })
       .catch((error) => {
         console.log(error);

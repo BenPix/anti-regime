@@ -13,7 +13,7 @@
 <script>
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import VueHeadful from "vue-headful";
 
 export default {
@@ -23,14 +23,11 @@ export default {
     Footer,
     VueHeadful,
   },
-  methods: {
-    ...mapActions(["initUserData"]),
-  },
   computed: {
     ...mapState(["mainTitle", "userData"]),
   },
   created() {
-    this.initUserData();
+    console.log("app is created");
   },
 };
 </script>
