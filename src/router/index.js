@@ -10,6 +10,7 @@ import Dashboard from "../views/Dashboard.vue";
 import Weighing from "../views/Weighing.vue";
 import Graph from "../views/Graph.vue";
 import Goal from "../views/Goal.vue";
+import Help from "../views/Help.vue";
 
 Vue.use(VueRouter);
 
@@ -70,6 +71,11 @@ const routes = [
     path: "/goal",
     name: "goal",
     component: Goal,
+  },
+  {
+    path: "/help",
+    name: "help",
+    component: Help,
   },
 ];
 

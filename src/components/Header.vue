@@ -27,6 +27,14 @@
               >Déconnexion</router-link
             >
           </b-nav-item>
+          <b-nav-item>
+            <router-link to="/help">
+              <b-icon
+                icon="question-circle"
+                class="text-decoration-none text-white"
+              ></b-icon>
+            </router-link>
+          </b-nav-item>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto" v-else>
           <b-nav-item>

@@ -87,7 +87,7 @@ export default new Vuex.Store({
   actions: {
     // asynchrone => appel API ici
     toSignIn(context, id) {
-      findUser(id)
+       return findUser(id)
         .then((res) => {
           context.commit("SET_USER_ID", res.data.user.id);
           context.commit("SET_USER_EMAIL", res.data.user.email);
@@ -136,6 +136,9 @@ export default new Vuex.Store({
     toCompleteTitle(context, pageTitle) {
       context.commit("ADD_TO_TITLE", pageTitle);
     },
+    toUpdateUser(context, prenom) {
+      context.commit("SET_USER_PRENOM", prenom);
+    }
   },
   plugins: [createPersistedState()],
   modules: {},

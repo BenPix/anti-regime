@@ -69,9 +69,11 @@ export default {
         .then((res) => {
           this.connexionFailed = !res.data.result.success;
           if (!this.connexionFailed) {
-            this.toSignIn(res.data.result.user_id);
-            this.$router.push({ name: "dashboard" });
+            return this.toSignIn(res.data.result.user_id);
           }
+        })
+        .then(() => {
+          this.$router.push({ name: "dashboard" });
         })
         .catch(() => {
           this.connexionFailed = false;

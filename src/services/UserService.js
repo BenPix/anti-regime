@@ -12,6 +12,18 @@ export function createUser(filledForm) {
     });
 }
 
+export function updateUser(filledForm) {
+  return axios
+    .put("http://localhost:8081/api/user", { user: filledForm })
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      console.log(err);
+      return undefined;
+    });
+}
+
 export function findUser(id) {
   return axios
     .get("http://localhost:8081/api/user", {
@@ -134,51 +146,6 @@ export function findWeighingsForGraph(userData) {
       return [];
     });
 }
-
-/** DEPRECATED */
-/*function convertWeighingsForGraph(weighings, poids) {
-  if (weighings.length === 0) return [];
-
-  let firstDate = weighings[0].date;
-  firstDate = new Date(firstDate);
-  let poidsForGraph = [];
-  poidsForGraph[0] = 0;
-  let average = [];
-  let nextWeek = firstDate;
-  nextWeek.setDate(nextWeek.getDate() + 7);
-
-  while (weighings.length > 0) {  
-    let pesee = weighings.shift();
-    let date = new Date(pesee.date);
-  
-    if (date >= nextWeek || weighings.length === 0) {
-      //calcul de la moyenne
-      let moy = 0;
-      for (let i = 0; i < average.length; i++) {
-        moy += average[i];
-      }
-      moy /= average.length;
-      poidsForGraph.push(parseFloat((poids - moy).toFixed(1)));
-    
-      // on reinit average, ainsi que le debut de semaine
-      average = [];
-      nextWeek.setDate(nextWeek.getDate() + 7);
-    }
-  
-    // on n'oublie pas d'enregistrer le poids pour la moyenne
-    average.push(pesee.poids);
-  }
-
-  // dernier enregistrement une fois l'array vidé
-  let moy = 0;
-  for (let i = 0; i < average.length; i++) {
-    moy += average[i];
-  }
-  moy /= average.length;
-  poidsForGraph.push(parseFloat((poids - moy).toFixed(1)));
-
-  return poidsForGraph;
-}*/
 
 function convertWeighingsForGraph(weighings, poids) {
   // initialisation des variables

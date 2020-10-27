@@ -52,7 +52,7 @@
     <div id="tableau-de-pesee">
       <hr />
       <h3>Historique de vos pesées</h3>
-      <table class="table">
+      <table class="table table-bordered table-striped">
         <thead class="thead-dark">
           <tr>
             <th scope="col">Poids</th>
