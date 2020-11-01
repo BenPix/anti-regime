@@ -1,22 +1,22 @@
 <template>
   <div id="header">
     <b-navbar toggleable="lg" type="dark" variant="dark" fixed="top">
-      <router-link to="/">
-        <b-navbar-brand href="/"
-          ><b-icon-emoji-sunglasses></b-icon-emoji-sunglasses
-          >&nbsp;Anti-Régime</b-navbar-brand
-        >
-      </router-link>
+      <router-link
+        v-if="signedIn"
+        class="text-decoration-none text-white font-weight-bold"
+        to="/dashboard"
+        ><b-navbar-brand>ANTI-REGIME</b-navbar-brand></router-link
+      ><router-link
+        v-else
+        class="text-decoration-none text-white font-weight-bold"
+        to="/"
+        ><b-navbar-brand>ANTI-REGIME</b-navbar-brand></router-link
+      >
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto" v-if="signedIn">
-          <b-nav-item>
-            <router-link class="text-decoration-none text-white" to="/dashboard"
-              >Tableau de bord</router-link
-            >
-          </b-nav-item>
           <b-nav-item>
             <router-link class="text-decoration-none text-white" to="/profile"
               >Profil</router-link

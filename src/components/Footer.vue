@@ -17,7 +17,6 @@ html {
   position: relative;
   min-height: 100%;
 }
-
 .footer {
   position: absolute;
   bottom: 0;
