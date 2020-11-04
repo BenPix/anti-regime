@@ -1,8 +1,5 @@
 <template>
   <div id="weighing" class="text-left">
-    <div>
-      <img src="../assets/fat-people-icon-vector.jpg" alt="fat-people-icon" />
-    </div>
     <b-card :bg-variant="messageContainer">
       <div v-if="weightSubmited">
         <p class="text-white text-center h1">Enregistré !</p>
@@ -148,6 +145,7 @@ export default {
     },
   },
   mounted() {
+    window.scrollTo(0, 0);
     this.toCompleteTitle("Pesée du jour");
 
     // find today's date for default value of input with date type
@@ -174,12 +172,5 @@ export default {
   padding-left: 10%;
   padding-bottom: 10%;
   padding-right: 10%;
-}
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 30px;
-  max-width: 20%;
 }
 </style>

@@ -112,6 +112,10 @@ export function perteCaloriqueMaximale(userData) {
   return parseInt(cal * 0.25);
 }
 
+// détermine la dépense et la réduction selon 3 stratégies:
+// - dépense maximisée = max 20% du déficit max autorisé
+// - réduction maximisée = max 15% du déficit max autorisé
+// - équilibre entre déficit et réduction = max 12.5% du déficit max autorisé
 export function strategieDeficit(deficitMax, deficit, strategie = "") {
   if (strategie === "depense") {
     let depense = deficitMax * 0.8;

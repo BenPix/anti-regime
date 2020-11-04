@@ -272,9 +272,6 @@ export default {
   width: 50%;
   margin: 0 25% 0 25%;
 }
-.essayer {
-  margin-top: 30px;
-}
 h1 {
   font-size: 3em;
   width: 80%;

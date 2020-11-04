@@ -8,7 +8,6 @@ import SignOut from "../views/SignOut.vue";
 import Profile from "../views/Profile.vue";
 import Dashboard from "../views/Dashboard.vue";
 import Weighing from "../views/Weighing.vue";
-import Graph from "../views/Graph.vue";
 import Goal from "../views/Goal.vue";
 import Help from "../views/Help.vue";
 
@@ -61,11 +60,6 @@ const routes = [
     path: "/weighing",
     name: "weighing",
     component: Weighing,
-  },
-  {
-    path: "/graph",
-    name: "graph",
-    component: Graph,
   },
   {
     path: "/goal",
