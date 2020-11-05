@@ -161,21 +161,13 @@ function convertWeighingsForGraph(weighings, poids) {
 
   // parcourt des weighings et calcul des valeurs moyennes pour chaque semaine
   while (weighings.length > 0) {  
-    console.log("data parcourue = " + weighings[0].poids);
     let pesee = weighings[0];
     let date = new Date(pesee.date);
-
-    console.log("cette data a pour date :");
-    console.log(weighings[0].date);
-    console.log("on veut savoir si cette date est < à ");
-    console.log(nextWeek);
 
     if (date < nextWeek) {
       average.push(pesee.poids);
       weighings.shift();
     }
-    console.log("la variable average vaut :");
-    console.log(average);
 
     // si la valeur suivante est hors de la limite, ou qu'il n'y a plus de valeur suivante
     // on calcul la moyenne et l'insère
@@ -190,12 +182,6 @@ function convertWeighingsForGraph(weighings, poids) {
       endOfWeekReached = date > nextWeek;
 
       // on set le jour de la semaine suivante
-      console.log("La date de la data suivante est :");
-      console.log(date);
-      console.log("la date limite est :");
-      console.log(nextWeek);
-      console.log("la fin de la semaine est elle atteinte ?");
-      console.log(endOfWeekReached);
       nextWeek.setDate(nextWeek.getDate() + 7);
     }
 
