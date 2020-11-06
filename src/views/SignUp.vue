@@ -11,7 +11,7 @@
         Bienvenue dans l'aventure !
       </p>
       <b-form @submit.stop.prevent="onSubmit" v-else>
-        <h3>Données de connection</h3>
+        <h3>Données de connexion</h3>
         <b-form-group
           id="email-group"
           label="Adresse email:"
