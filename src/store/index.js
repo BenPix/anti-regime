@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     title: "Anti-Régime",
     mainTitle: "",
+    accountType: "",
     userData: {
       id: 0,
       prenom: "",
@@ -26,17 +27,28 @@ export default new Vuex.Store({
       goalTime: 0,
       goalIsDefined: false,
     },
+      userWeighings: [],
+    weighingsAutoIncrementId: 0,
   },
   mutations: {
     // synchrone
     SIGN_OUT(state) {
       state.userData = {};
+      state.accountType = "";
+      state.userWeighings = [];
+      state.weighingsAutoIncrementId = 0;
+    },
+    SET_ACCOUNT_TYPE_LOCAL(state) {
+      state.accountType = "local";
+    },
+    SET_ACCOUNT_TYPE_REMOTE(state) {
+      state.accountType.id = "remote";
     },
     SET_USER_ID(state, userId) {
-      state.userData.id = userId;
+      Vue.set(state.userData, 'id', parseInt(userId));
     },
     SET_USER_PRENOM(state, prenom) {
-      state.userData.prenom = prenom;
+      Vue.set(state.userData, 'prenom', prenom);
     },
     SET_USER_EMAIL(state, email) {
       state.userData.email = email;
@@ -48,40 +60,63 @@ export default new Vuex.Store({
       state.userData.naissance = naissance;
     },
     SET_USER_BASIC_ACTIVITY(state, activitePhysiqueBase) {
-      state.userData.activitePhysiqueBase = activitePhysiqueBase;
+      state.userData.activitePhysiqueBase = parseInt(activitePhysiqueBase);
     },
     SET_USER_LOW_ACTIVITY(state, activiteFaible) {
-      state.userData.activiteFaible = activiteFaible;
+      state.userData.activiteFaible = parseInt(activiteFaible);
     },
     SET_USER_MIDDLE_ACTIVITY(state, activiteMoyenne) {
-      state.userData.activiteMoyenne = activiteMoyenne;
+      state.userData.activiteMoyenne = parseInt(activiteMoyenne);
     },
     SET_USER_HIGH_ACTIVITY(state, activiteForte) {
-      state.userData.activiteForte = activiteForte;
+      state.userData.activiteForte = parseInt(activiteForte);
     },
     SET_USER_WEIGHT(state, poids) {
-      state.userData.poids = poids;
+      state.userData.poids = parseInt(poids);
     },
     SET_USER_SIZE(state, taille) {
-      state.userData.taille = taille;
+      state.userData.taille = parseInt(taille);
     },
     SET_GOAL_WEIGHT(state, weight) {
-      state.userData.goalWeight = weight;
+      Vue.set(state.userData, 'goalWeight', parseInt(weight));
     },
     SET_GOAL_DEFICIT(state, deficit) {
-      state.userData.goalDeficit = deficit;
+      Vue.set(state.userData, 'goalDeficit', parseInt(deficit));
     },
     SET_GOAL_TIME(state, weeks) {
-      state.userData.goalTime = weeks;
+      state.userData.goalTime = parseInt(weeks);
     },
     SET_GOAL_DEFINED(state) {
-      state.userData.goalIsDefined = true;
+      Vue.set(state.userData, 'goalIsDefined', true);
     },
     SET_GOAL_UNDEFINED(state) {
-      state.userData.goalIsDefined = false;
+      Vue.set(state.userData, 'goalIsDefined', false);
     },
     ADD_TO_TITLE(state, pageTitle) {
       state.mainTitle = state.title + " | " + pageTitle;
+    },
+    REGISTER_WEIGHT(state, weightData) {
+      state.userWeighings.push({
+        id: state.weighingsAutoIncrementId,
+        poids: weightData.poids,
+        date: weightData.date,
+      });
+    },
+    INCREMENT_WEIGHINGS_ID(state) {
+      state.weighingsAutoIncrementId++;
+    },
+    DELETE_WEIGHT(state, weightId) {
+      state.userWeighings.forEach((weighing, key, arr) => {
+        if (weighing.id === weightId) {
+          arr.splice(key, 1);
+          return;
+        }
+      });
+    },
+    SORT_WEIGHINGS(state) {
+      state.userWeighings.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
     },
   },
   actions: {
@@ -138,6 +173,45 @@ export default new Vuex.Store({
     },
     toUpdateUser(context, prenom) {
       context.commit("SET_USER_PRENOM", prenom);
+    },
+    userRegistrationOnLocal(context, formData) {
+      context.commit("SET_ACCOUNT_TYPE_LOCAL");
+      context.commit("SET_USER_ID", 1);
+      context.commit("SET_USER_PRENOM", formData.prenom);
+      context.commit("SET_USER_SEX", formData.sexe);
+      context.commit("SET_USER_BIRTHDATE", formData.naissance);
+      context.commit("SET_USER_BASIC_ACTIVITY", formData.activitePhysiqueBase);
+      context.commit("SET_USER_LOW_ACTIVITY", formData.activiteFaible);
+      context.commit("SET_USER_MIDDLE_ACTIVITY", formData.activiteMoyenne);
+      context.commit("SET_USER_HIGH_ACTIVITY", formData.activiteForte);
+      context.commit("SET_USER_WEIGHT", formData.poids);
+      context.commit("SET_USER_SIZE", formData.taille);
+    },
+    toRegisterWeight(context, weightData) {
+      context.commit("REGISTER_WEIGHT", weightData);
+      context.commit("INCREMENT_WEIGHINGS_ID");
+      context.commit("SORT_WEIGHINGS");
+    },
+    toDeleteWeight(context, weighId) {
+      context.commit("DELETE_WEIGHT", weighId);
+    }
+  },
+  getters: {
+    getUserWeighings: state => {
+      let userWeighingsCopy = JSON.parse(JSON.stringify(state.userWeighings));
+
+      userWeighingsCopy.forEach((weighing) => {
+        const weighingDate = new Date(weighing.date);
+        const dayNumber =
+        (weighingDate.getDate() > 9 ? "" : "0") + weighingDate.getDate();
+        const monthNumber =
+        ((weighingDate.getMonth() + 1) > 9 ? "" : "0") + (weighingDate.getMonth() + 1);
+        weighing.date = (
+          dayNumber + "/" + monthNumber + "/" + weighingDate.getFullYear()
+        );
+      });
+
+      return userWeighingsCopy;
     }
   },
   plugins: [createPersistedState()],

@@ -1,13 +1,16 @@
 <template>
   <div id="weighing" class="text-left">
-    <b-card :bg-variant="messageContainer">
-      <div v-if="weightSubmited">
-        <p class="text-white text-center h1">Enregistré !</p>
-        <button class="btn btn-lg btn-dark mt-4" @click="weightAgain">
-          Enregistrer une nouvelle pesée
-        </button>
-      </div>
-      <b-form @submit.stop.prevent="onSubmit" v-else>
+    <v-snackbar
+      v-model="snackbar"
+      timeout="1500"
+      color="success"
+      outlined
+      centered
+      elevation="10"
+      >Pesée enregistrée
+    </v-snackbar>
+    <b-card bg-variant="light">
+      <b-form @submit.stop.prevent="onSubmit">
         <h3>Je me pèse</h3>
         <b-form-group id="poids-group" label="Mon poids:" label-for="poids">
           <b-form-input
@@ -43,10 +46,7 @@
         </p>
       </b-form>
     </b-card>
-    <router-link :to="'/dashboard'" class="btn btn-lg btn-secondary mt-4">
-      Retour
-    </router-link>
-    <div id="tableau-de-pesee">
+    <div id="tableau-de-pesee" v-if="weighings.length > 0">
       <hr />
       <h3>Historique de vos pesées</h3>
       <table class="table table-bordered table-striped">
@@ -58,13 +58,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(weighing, index) in weighings" :key="weighing.date">
+          <tr v-for="(weighing, index) in weighings" :key="weighing.id">
             <td>{{ weighing.poids }} kg</td>
             <td>{{ weighing.date }}</td>
             <td>
               <button
                 class="btn btn-primary"
-                @click="deleteRow(weighing.id, index)"
+                @click.stop="deleteRow(weighing.id, index)"
               >
                 Supprimer
               </button>
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import BasicButton from "../components/BasicButton.vue";
 import {
   weightUser,
@@ -90,6 +90,7 @@ export default {
   name: "Weighing",
   data() {
     return {
+      snackbar: false,
       buttonText: "Enregistrer",
       buttonType: "submit",
       poids: 70,
@@ -100,48 +101,55 @@ export default {
         { label: "Date", field: "date", sortable: true, type: "String" },
       ],
       weighings: [],
-      messageContainer: "light",
-      weightSubmited: false,
     };
   },
   computed: {
-    ...mapState(["userData"]),
+    ...mapState(["userData", "accountType", "userWeighings"]),
+    ...mapGetters(["getUserWeighings"]),
   },
   methods: {
-    ...mapActions(["toCompleteTitle"]),
+    ...mapActions(["toCompleteTitle", "toRegisterWeight", "toDeleteWeight"]),
     today() {
       const today = new Date(Date.now());
-      const dayNumber =
-        (today.getDate().length === 1 ? "" : "0") + today.getDate();
+      const dayNumber = (today.getDate() > 9 ? "" : "0") + today.getDate();
 
-      this.date =
-        today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + dayNumber;
+      return (
+        today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + dayNumber
+      );
     },
     onSubmit() {
-      weightUser(this.poids, this.date, this.userData.id)
-        .then(() => {
-          // on efface le formulaire, affiche le message à la place, et affiche
-          // 2 boutons, un pour revenir au tableau de bord, l'autre pour réafficher le form
-          this.messageContainer = "success";
-          this.weightSubmited = true;
-          // refresh du tableau des pesées
-          return findWeighings(this.userData.id);
-        })
-        .then((res) => {
-          this.weighings = res.data.results;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      if (this.accountType === "local") {
+        this.toRegisterWeight({ poids: this.poids, date: this.date });
+        this.weighings = this.getUserWeighings;
+        this.snackbar = true;
+      } else {
+        weightUser(this.poids, this.date, this.userData.id)
+          .then(() => {
+            this.snackbar = true;
+            // refresh du tableau des pesées
+            return findWeighings(this.userData.id);
+          })
+          .then((res) => {
+            this.weighings = res.data.results;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
-    deleteRow(weigh_id, row_id) {
-      deleteWeigh(weigh_id).then(() => {
-        this.weighings.splice(row_id, 1);
-      });
-    },
-    weightAgain() {
-      this.messageContainer = "light";
-      this.weightSubmited = false;
+    deleteRow(weighId, rowId) {
+      if (this.accountType === "local") {
+        this.toDeleteWeight(weighId);
+        this.weighings.splice(rowId, 1);
+      } else {
+        deleteWeigh(weighId)
+          .then(() => {
+            this.weighings.splice(rowId, 1);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
   },
   mounted() {
@@ -152,13 +160,17 @@ export default {
     this.date = today();
 
     // find the user's weighings
-    findWeighings(this.userData.id)
-      .then((res) => {
-        this.weighings = res.data.results;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (this.accountType === "local") {
+      this.weighings = this.getUserWeighings;
+    } else {
+      findWeighings(this.userData.id)
+        .then((res) => {
+          this.weighings = res.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   },
   components: {
     BasicButton,

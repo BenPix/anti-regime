@@ -128,7 +128,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["userData"]),
+    ...mapState(["userData", "accountType"]),
     detailMarche() {
       return this.sportDepenseListe.find((sport) => sport?.sport === "Marche");
     },
@@ -205,14 +205,21 @@ export default {
   },
   created() {
     this.loaded = false;
-    readSportDepenseForExamples()
-      .then((result) => {
-        this.sportDepenseListe = result.data.results;
+    if (this.accountType === "local") {
+      import("../assets/sportDepenseListe").then((module) => {
+        this.sportDepenseListe = module.exemples;
         this.loaded = true;
-      })
-      .catch((error) => {
-        console.log(error);
       });
+    } else {
+      readSportDepenseForExamples()
+        .then((result) => {
+          this.sportDepenseListe = result.data.results;
+          this.loaded = true;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   },
 };
 </script>

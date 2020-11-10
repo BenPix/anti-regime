@@ -30,26 +30,7 @@ export default {
   name: "help",
   data() {
     return {
-      sports: [
-        {
-          id: 1,
-          sport: "Marche",
-          coef: 2,
-          detail: "Marche lente 3km/h",
-        },
-        {
-          id: 2,
-          sport: "Marche",
-          coef: 3.5,
-          detail: "Marche 5km/h",
-        },
-        {
-          id: 3,
-          sport: "Marche",
-          coef: 5,
-          detail: "Marche lente 6.5km/h",
-        },
-      ],
+      sports: [],
     };
   },
   methods: {
@@ -58,16 +39,22 @@ export default {
     },
   },
   computed: {
-    ...mapState(["userData"]),
+    ...mapState(["userData", "accountType"]),
   },
   created() {
-    readSportDepense()
-      .then((res) => {
-        this.sports = res.data.results;
-      })
-      .catch((err) => {
-        console.log(err);
+    if (this.accountType === "local") {
+      import("../assets/sportDepenseListe").then((module) => {
+        this.sports = module.all;
       });
+    } else {
+      readSportDepense()
+        .then((res) => {
+          this.sports = res.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   },
 };
 </script>

@@ -1,5 +1,9 @@
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production' ? '/anti-regime/' : '/',
   devServer: {
+    disableHostCheck: true,
+    port: 8080,
+    public: '192.168.0.16:8080',
     proxy: {
       "^/api": {
         target: "http://localhost:8081/api",

@@ -257,20 +257,29 @@ export default {
       this.saveGoal(this.perteCaloriqueMax, this.dureeMin);
     },
     saveGoal(perte, duree) {
-      goalUser(this.userData.id, this.poids, perte)
-        .then(() => {
-          // logique métier à implémenter
-          const goalData = {
-            goalIsDefined: true,
-            goalWeight: this.poids,
-            goalDeficit: perte,
-            goalTime: duree,
-          };
-          this.setOrUnsetGoal(goalData);
-        })
-        .catch((err) => {
-          console.log(err); // deal with error
-        });
+      if (this.accountType === "local") {
+        const goalData = {
+          goalIsDefined: true,
+          goalWeight: this.poids,
+          goalDeficit: perte,
+          goalTime: duree,
+        };
+        this.setOrUnsetGoal(goalData);
+      } else {
+        goalUser(this.userData.id, this.poids, perte)
+          .then(() => {
+            const goalData = {
+              goalIsDefined: true,
+              goalWeight: this.poids,
+              goalDeficit: perte,
+              goalTime: duree,
+            };
+            this.setOrUnsetGoal(goalData);
+          })
+          .catch((err) => {
+            console.log(err); // deal with error
+          });
+      }
     },
     hoverChoiceBasique: function () {
       this.borderBasique = "success";
@@ -302,8 +311,11 @@ export default {
       this.headerBgRapide = "primary";
       this.headerTextRapide = "white";
     },
-    cancelGoalChoice: function () {
-      this.setOrUnsetGoal({ goalIsDefined: false });
+    cancelGoalChoice() {
+      const goalData = {
+        goalIsDefined: false,
+      };
+      this.setOrUnsetGoal(goalData);
       this.leaveChoiceBasique();
       this.leaveChoicePerso();
       this.leaveChoiceRapide();
@@ -315,7 +327,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["userData"]),
+    ...mapState(["userData", "accountType"]),
     besoinCaloriqueFinal() {
       return besoinCalorique(this.userData);
     },
@@ -367,7 +379,6 @@ export default {
     };
   },
   mounted() {
-    window.scrollTo(0, 0);
     this.toCompleteTitle("Objectif");
     this.deficit = this.perteCaloriqueMin;
   },

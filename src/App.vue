@@ -32,6 +32,9 @@ export default {
   created() {
     console.log("app is created");
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
 };
 </script>
 

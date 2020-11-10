@@ -17,7 +17,8 @@ export default class GraphService {
       let arr = [];
       
       for(let key in graphData) {
-        arr[key] = graphData[key] * (deficitCalorique / 100)
+        if (key != 0) arr[key - 1] = graphData[key] * (deficitCalorique / 100)
+        else arr[0] = 0;
       }
       
       return arr;

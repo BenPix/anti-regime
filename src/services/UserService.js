@@ -147,7 +147,9 @@ export function findWeighingsForGraph(userData) {
     });
 }
 
-function convertWeighingsForGraph(weighings, poids) {
+export function convertWeighingsForGraph(weighings, poids) {
+  if (weighings.length == 0) return [];
+
   // initialisation des variables
   // on détermine le jour de la semaine suivante = limite
   let firstDate = weighings[0].date;
@@ -199,7 +201,7 @@ function calculMoyenne(average, poids) {
   let moy = 0;
 
   for (let i = 0; i < average.length; i++) {
-    moy += average[i];
+    moy += parseFloat(average[i]);
   }
 
   moy /= average.length;
