@@ -19,11 +19,17 @@
 
       <!-- le graphique -->
 
-      <v-container class="pt-10">
+      <v-container v-if="showedChart" class="pt-10">
         <Graph v-if="userData.goalIsDefined"></Graph>
       </v-container>
 
-      <!-- les 3 actions possibles -->
+      <!-- le formulaire de pesée + liste des pesées -->
+
+      <v-container class="pt-10">
+        <Weighing v-on:weighing-update="refreshChart"></Weighing>
+      </v-container>
+
+      <!-- les 2 actions possibles -->
 
       <v-container class="my-16">
         <v-row calign="center" justify="center">
@@ -214,6 +220,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Graph from "../components/Graph.vue";
+import Weighing from "../components/Weighing.vue";
 
 export default {
   name: "Dashboard",
@@ -221,10 +228,11 @@ export default {
     return {
       cardOpened1: false,
       cardOpened2: false,
+      showedChart: true,
     };
   },
   methods: {
-    ...mapActions(["toCompleteTitle"]),
+    ...mapActions(["toCompleteTitle", "toToggleGoalDefined"]),
     toggleCard1(event) {
       event.preventDefault();
       this.cardOpened1 = !this.cardOpened1;
@@ -233,15 +241,22 @@ export default {
       event.preventDefault();
       this.cardOpened2 = !this.cardOpened2;
     },
+    refreshChart() {
+      this.showedChart = false;
+      setTimeout(() => {
+        this.showedChart = true;
+      }, 100);
+    },
   },
   computed: {
-    ...mapState(["userData"]),
+    ...mapState(["userData", "userWeighings"]),
   },
   mounted() {
     this.toCompleteTitle("Tableau de bord");
   },
   components: {
     Graph,
+    Weighing,
   },
 };
 </script>

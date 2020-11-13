@@ -205,21 +205,15 @@ export default {
   },
   created() {
     this.loaded = false;
-    if (this.accountType === "local") {
-      import("../assets/sportDepenseListe").then((module) => {
-        this.sportDepenseListe = module.exemples;
+
+    readSportDepenseForExamples(this.accountType)
+      .then((result) => {
+        this.sportDepenseListe = result.data.results;
         this.loaded = true;
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    } else {
-      readSportDepenseForExamples()
-        .then((result) => {
-          this.sportDepenseListe = result.data.results;
-          this.loaded = true;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
   },
 };
 </script>

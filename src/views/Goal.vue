@@ -257,29 +257,19 @@ export default {
       this.saveGoal(this.perteCaloriqueMax, this.dureeMin);
     },
     saveGoal(perte, duree) {
-      if (this.accountType === "local") {
-        const goalData = {
-          goalIsDefined: true,
-          goalWeight: this.poids,
-          goalDeficit: perte,
-          goalTime: duree,
-        };
-        this.setOrUnsetGoal(goalData);
-      } else {
-        goalUser(this.userData.id, this.poids, perte)
-          .then(() => {
-            const goalData = {
-              goalIsDefined: true,
-              goalWeight: this.poids,
-              goalDeficit: perte,
-              goalTime: duree,
-            };
-            this.setOrUnsetGoal(goalData);
-          })
-          .catch((err) => {
-            console.log(err); // deal with error
-          });
-      }
+      goalUser(this.accountType, this.userData.id, this.poids, perte)
+        .then(() => {
+          const goalData = {
+            goalIsDefined: true,
+            goalWeight: this.poids,
+            goalDeficit: perte,
+            goalTime: duree,
+          };
+          this.setOrUnsetGoal(goalData);
+        })
+        .catch((err) => {
+          console.log(err); // deal with error
+        });
     },
     hoverChoiceBasique: function () {
       this.borderBasique = "success";

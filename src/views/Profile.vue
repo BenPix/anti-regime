@@ -5,7 +5,11 @@
     </div>
     <h1 class="text-center mb-5">Profil de {{ userData.prenom }}</h1>
     <b-card bg-variant="light">
-      <b-form-group label="Adresse email:" label-for="email">
+      <b-form-group
+        label="Adresse email:"
+        label-for="email"
+        v-if="accountType === 'remote'"
+      >
         <b-form-input name="email" :value="userData.email" disabled>
         </b-form-input>
       </b-form-group>
@@ -16,7 +20,7 @@
       </b-form-group>
 
       <b-form-group label="Date de naissance:" label-for="naissance">
-        <b-form-input name="naissance" :value="userData.naissance" disabled>
+        <b-form-input name="naissance" :value="naissanceFormated" disabled>
         </b-form-input>
       </b-form-group>
 
@@ -89,85 +93,87 @@
       </b-form-group>
     </b-card>
 
-    <div v-if="submited">
-      <p class="text-white text-center h1">Profil modifié avec succès !</p>
-      <button class="btn btn-lg btn-dark mt-4" @click="retour">
-        Modifier à nouveau mes données
-      </button>
-    </div>
-    <div v-else>
-      <h1 class="text-center mt-5 mb-5">Modifier vos données</h1>
+    <div v-if="accountType === 'remote'">
+      <div v-if="submited">
+        <p class="text-white text-center h1">Profil modifié avec succès !</p>
+        <button class="btn btn-lg btn-dark mt-4" @click="retour">
+          Modifier à nouveau mes données
+        </button>
+      </div>
+      <div v-else>
+        <h1 class="text-center mt-5 mb-5">Modifier vos données</h1>
 
-      <b-card bg-variant="light">
-        <b-form @submit.stop.prevent="onSubmit">
-          <h3>Données de connection</h3>
-          <b-form-group
-            id="password-group"
-            label="Mot de passe:"
-            label-for="password"
-          >
-            <b-form-input
-              id="password"
-              name="password"
-              type="password"
-              v-model="$v.form.password.$model"
-              :state="validateState('password')"
-              aria-describedby="password-feedback"
+        <b-card bg-variant="light">
+          <b-form @submit.stop.prevent="onSubmit">
+            <h3>Données de connection</h3>
+            <b-form-group
+              id="password-group"
+              label="Mot de passe:"
+              label-for="password"
             >
-            </b-form-input>
-            <b-form-invalid-feedback id="password-feedback"
-              >Votre mot de passe doit être composé de minimum 9
-              caractères</b-form-invalid-feedback
-            >
-          </b-form-group>
+              <b-form-input
+                id="password"
+                name="password"
+                type="password"
+                v-model="$v.form.password.$model"
+                :state="validateState('password')"
+                aria-describedby="password-feedback"
+              >
+              </b-form-input>
+              <b-form-invalid-feedback id="password-feedback"
+                >Votre mot de passe doit être composé de minimum 9
+                caractères</b-form-invalid-feedback
+              >
+            </b-form-group>
 
-          <b-form-group
-            id="password-confirm-group"
-            label="Confirmez votre mot de passe:"
-            label-for="password-confirm"
-          >
-            <b-form-input
-              id="password-confirm"
-              name="password-confirm"
-              type="password"
-              v-model="$v.form.passwordConfirm.$model"
-              :state="validateState('passwordConfirm')"
-              aria-describedby="password-confirm-feedback"
+            <b-form-group
+              id="password-confirm-group"
+              label="Confirmez votre mot de passe:"
+              label-for="password-confirm"
             >
-            </b-form-input>
-            <b-form-invalid-feedback id="password-confirm-feedback"
-              >Vous n'avez pas confirmé votre mot de
-              passe</b-form-invalid-feedback
-            >
-          </b-form-group>
+              <b-form-input
+                id="password-confirm"
+                name="password-confirm"
+                type="password"
+                v-model="$v.form.passwordConfirm.$model"
+                :state="validateState('passwordConfirm')"
+                aria-describedby="password-confirm-feedback"
+              >
+              </b-form-input>
+              <b-form-invalid-feedback id="password-confirm-feedback"
+                >Vous n'avez pas confirmé votre mot de
+                passe</b-form-invalid-feedback
+              >
+            </b-form-group>
 
-          <h3>Données personnelles</h3>
-          <b-form-group
-            id="prenom-group"
-            label="Modifiez votre prénom:"
-            label-for="prenom"
-          >
-            <b-form-input
-              id="prenom"
-              name="prenom"
-              required
-              v-model="$v.form.prenom.$model"
-              :state="validateState('prenom')"
-              aria-describedby="prenom-feedback"
+            <h3>Données personnelles</h3>
+            <b-form-group
+              id="prenom-group"
+              label="Modifiez votre prénom:"
+              label-for="prenom"
             >
-            </b-form-input>
-            <b-form-invalid-feedback id="prenom-feedback"
-              >Votre prénom est requis et doit avoir une longueur maximale de 50
-              caractères</b-form-invalid-feedback
-            >
-          </b-form-group>
+              <b-form-input
+                id="prenom"
+                name="prenom"
+                required
+                v-model="$v.form.prenom.$model"
+                :state="validateState('prenom')"
+                aria-describedby="prenom-feedback"
+              >
+              </b-form-input>
+              <b-form-invalid-feedback id="prenom-feedback"
+                >Votre prénom est requis et doit avoir une longueur maximale de
+                50 caractères</b-form-invalid-feedback
+              >
+            </b-form-group>
 
-          <BasicButton :type="buttonType" :text="buttonText"></BasicButton>
-          <span class="warning-email-error" v-if="form.invalidEmail"
-            >Ce compte existe déjà.</span
-          >
-        </b-form>
-      </b-card>
+            <BasicButton :type="buttonType" :text="buttonText"></BasicButton>
+            <span class="warning-email-error" v-if="form.invalidEmail"
+              >Ce compte existe déjà.</span
+            >
+          </b-form>
+        </b-card>
+      </div>
     </div>
   </div>
 </template>
@@ -230,7 +236,24 @@ export default {
     },
   },
   computed: {
-    ...mapState(["userData"]),
+    ...mapState(["userData", "accountType"]),
+    naissanceFormated() {
+      console.log(this.userData.naissance);
+      let naissance = this.userData.naissance.split("");
+
+      return (
+        naissance[8] +
+        naissance[9] +
+        "/" +
+        naissance[5] +
+        naissance[6] +
+        "/" +
+        naissance[0] +
+        naissance[1] +
+        naissance[2] +
+        naissance[3]
+      );
+    },
     activitesPhysiquesBase() {
       const value = this.userData.activitePhysiqueBase;
 

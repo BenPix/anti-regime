@@ -14,10 +14,7 @@
 import { mapActions, mapState } from "vuex";
 import LineChart from "../components/LineChart";
 import Graph from "../services/GraphiqueService";
-import {
-  findWeighingsForGraph,
-  convertWeighingsForGraph,
-} from "../services/UserService";
+import { findWeighingsForGraph } from "../services/UserService";
 import { perteCaloriqueMaximale } from "../services/RegimeService";
 import arrondir from "../services/ArrondirDeficit";
 
@@ -27,8 +24,6 @@ export default {
     return {
       loaded: false,
       weighings: [],
-      chartdatatest: null,
-      optionstest: null,
       graph: null,
     };
   },
@@ -43,7 +38,8 @@ export default {
       return arrondir(perte);
     },
     offset() {
-      //return 156;
+      if (this.weighings.length > 156) return 156;
+
       return this.weighings.length;
     },
     chartdata() {
@@ -161,23 +157,14 @@ export default {
     this.loaded = false;
     this.toCompleteTitle("Graphique");
 
-    if (this.accountType === "local") {
-      let userWeighingsCopy = JSON.parse(JSON.stringify(this.userWeighings));
-      this.weighings = convertWeighingsForGraph(
-        userWeighingsCopy.reverse(),
-        this.userData.poids
-      );
-      this.loaded = true;
-    } else {
-      findWeighingsForGraph(this.userData)
-        .then((weighingsData) => {
-          this.weighings = weighingsData;
-          this.loaded = true;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    findWeighingsForGraph(this, this.userData)
+      .then((weighingsData) => {
+        this.weighings = weighingsData;
+        this.loaded = true;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   components: {
     LineChart,

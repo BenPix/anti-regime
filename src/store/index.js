@@ -60,25 +60,25 @@ export default new Vuex.Store({
       state.userData.naissance = naissance;
     },
     SET_USER_BASIC_ACTIVITY(state, activitePhysiqueBase) {
-      state.userData.activitePhysiqueBase = parseInt(activitePhysiqueBase);
+      state.userData.activitePhysiqueBase = parseFloat(activitePhysiqueBase);
     },
     SET_USER_LOW_ACTIVITY(state, activiteFaible) {
-      state.userData.activiteFaible = parseInt(activiteFaible);
+      state.userData.activiteFaible = parseFloat(activiteFaible);
     },
     SET_USER_MIDDLE_ACTIVITY(state, activiteMoyenne) {
-      state.userData.activiteMoyenne = parseInt(activiteMoyenne);
+      state.userData.activiteMoyenne = parseFloat(activiteMoyenne);
     },
     SET_USER_HIGH_ACTIVITY(state, activiteForte) {
-      state.userData.activiteForte = parseInt(activiteForte);
+      state.userData.activiteForte = parseFloat(activiteForte);
     },
     SET_USER_WEIGHT(state, poids) {
-      state.userData.poids = parseInt(poids);
+      state.userData.poids = parseFloat(poids);
     },
     SET_USER_SIZE(state, taille) {
-      state.userData.taille = parseInt(taille);
+      state.userData.taille = parseFloat(taille);
     },
     SET_GOAL_WEIGHT(state, weight) {
-      Vue.set(state.userData, 'goalWeight', parseInt(weight));
+      Vue.set(state.userData, 'goalWeight', parseFloat(weight));
     },
     SET_GOAL_DEFICIT(state, deficit) {
       Vue.set(state.userData, 'goalDeficit', parseInt(deficit));
@@ -194,6 +194,10 @@ export default new Vuex.Store({
     },
     toDeleteWeight(context, weighId) {
       context.commit("DELETE_WEIGHT", weighId);
+    },
+    toToggleGoalDefined(context) {
+      context.commit("SET_GOAL_UNDEFINED");
+      context.commit("SET_GOAL_DEFINED");
     }
   },
   getters: {

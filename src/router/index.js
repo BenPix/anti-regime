@@ -7,7 +7,6 @@ import SignIn from "../views/SignIn.vue";
 import SignOut from "../views/SignOut.vue";
 import Profile from "../views/Profile.vue";
 import Dashboard from "../views/Dashboard.vue";
-import Weighing from "../views/Weighing.vue";
 import Goal from "../views/Goal.vue";
 import Help from "../views/Help.vue";
 
@@ -55,11 +54,6 @@ const routes = [
     path: "/dashboard",
     name: "dashboard",
     component: Dashboard,
-  },
-  {
-    path: "/weighing",
-    name: "weighing",
-    component: Weighing,
   },
   {
     path: "/goal",

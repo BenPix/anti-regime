@@ -67,7 +67,14 @@ export function connectUser(email, password) {
     });
 }
 
-export function weightUser(poids, date, userId) {
+export function weightUser(vue, poids, date, userId) {
+  if (vue.accountType === "local") {
+    vue.toRegisterWeight({ poids, date });
+
+    return new Promise((successCallback) => {
+      successCallback({message: "success"});
+    });
+  } else {
   return axios
     .post("http://localhost:8081/api/weight", {
       poids,
@@ -81,9 +88,20 @@ export function weightUser(poids, date, userId) {
       console.log(err);
       return undefined;
     });
+  }
 }
 
-export function findWeighings(userId) {
+export function findWeighings(vue, userId) {
+  if (vue.accountType === "local") {
+    return new Promise((successCallback) => {
+      successCallback(
+        {
+          data: {
+            results: vue.getUserWeighings,
+          }
+        })
+    });
+  } else {
   return axios
     .get("http://localhost:8081/api/weighings", {
       params: {
@@ -97,9 +115,17 @@ export function findWeighings(userId) {
       console.log(err);
       return undefined;
     });
+  }
 }
 
-export function deleteWeigh(weighId) {
+export function deleteWeigh(vue, weighId) {
+  if (vue.accountType === "local") {
+    vue.toDeleteWeight(weighId);
+
+    return new Promise((successCallback) => {
+      successCallback({message: "success"});
+    });
+  } else {
   return axios
     .delete("http://localhost:8081/api/weighings", {
       params: {
@@ -113,10 +139,16 @@ export function deleteWeigh(weighId) {
       console.log(err);
       return undefined;
     });
+  }
 }
 
-export function goalUser(userId, weight, deficit) {
-  return axios
+export function goalUser(accountType, userId, weight, deficit) {
+  if (accountType === "local") {
+    return new Promise(resolve => { 
+      resolve("success");
+    });
+  } else {
+    return axios
     .post("http://localhost:8081/api/goal", {
       userId,
       weight,
@@ -129,9 +161,21 @@ export function goalUser(userId, weight, deficit) {
       console.log(err);
       return undefined;
     });
+  }
 }
 
-export function findWeighingsForGraph(userData) {
+export function findWeighingsForGraph(vue, userData) {
+  if (vue.accountType === "local") {
+    let userWeighingsCopy = JSON.parse(JSON.stringify(vue.userWeighings));
+    let weighings = convertWeighingsForGraph(
+      userWeighingsCopy.reverse(),
+      vue.userData.poids
+    );
+
+    return new Promise(resolve => { 
+      resolve(weighings);
+    });
+  } else {
   return axios
     .get("http://localhost:8081/api/weighings-for-graph", {
       params: {
@@ -145,6 +189,7 @@ export function findWeighingsForGraph(userData) {
       console.log(err);
       return [];
     });
+  }
 }
 
 export function convertWeighingsForGraph(weighings, poids) {

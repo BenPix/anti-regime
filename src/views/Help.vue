@@ -42,19 +42,13 @@ export default {
     ...mapState(["userData", "accountType"]),
   },
   created() {
-    if (this.accountType === "local") {
-      import("../assets/sportDepenseListe").then((module) => {
-        this.sports = module.all;
+    readSportDepense(this.accountType)
+      .then((res) => {
+        this.sports = res.data.results;
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    } else {
-      readSportDepense()
-        .then((res) => {
-          this.sports = res.data.results;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
   },
 };
 </script>

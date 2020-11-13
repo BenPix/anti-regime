@@ -46,8 +46,7 @@
         </p>
       </b-form>
     </b-card>
-    <div id="tableau-de-pesee" v-if="weighings.length > 0">
-      <hr />
+    <div id="tableau-de-pesee" v-if="weighings.length > 0" class="mt-10">
       <h3>Historique de vos pesées</h3>
       <table class="table table-bordered table-striped">
         <thead class="thead-dark">
@@ -118,38 +117,29 @@ export default {
       );
     },
     onSubmit() {
-      if (this.accountType === "local") {
-        this.toRegisterWeight({ poids: this.poids, date: this.date });
-        this.weighings = this.getUserWeighings;
-        this.snackbar = true;
-      } else {
-        weightUser(this.poids, this.date, this.userData.id)
-          .then(() => {
-            this.snackbar = true;
-            // refresh du tableau des pesées
-            return findWeighings(this.userData.id);
-          })
-          .then((res) => {
-            this.weighings = res.data.results;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+      weightUser(this, this.poids, this.date, this.userData.id)
+        .then(() => {
+          this.snackbar = true;
+          // refresh du tableau des pesées
+          return findWeighings(this, this.userData.id);
+        })
+        .then((res) => {
+          this.weighings = res.data.results;
+          this.$emit("weighing-update");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     deleteRow(weighId, rowId) {
-      if (this.accountType === "local") {
-        this.toDeleteWeight(weighId);
-        this.weighings.splice(rowId, 1);
-      } else {
-        deleteWeigh(weighId)
-          .then(() => {
-            this.weighings.splice(rowId, 1);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+      deleteWeigh(this, weighId)
+        .then(() => {
+          this.weighings.splice(rowId, 1);
+          this.$emit("weighing-update");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   mounted() {
@@ -163,7 +153,7 @@ export default {
     if (this.accountType === "local") {
       this.weighings = this.getUserWeighings;
     } else {
-      findWeighings(this.userData.id)
+      findWeighings(this, this.userData.id)
         .then((res) => {
           this.weighings = res.data.results;
         })
