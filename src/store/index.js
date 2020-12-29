@@ -27,7 +27,7 @@ export default new Vuex.Store({
       goalTime: 0,
       goalIsDefined: false,
     },
-      userWeighings: [],
+    userWeighings: [],
     weighingsAutoIncrementId: 0,
   },
   mutations: {
@@ -216,6 +216,11 @@ export default new Vuex.Store({
       });
 
       return userWeighingsCopy;
+    },
+    getUserActualWeight: state => {
+      if (state.userWeighings.size === 0) return state.userData.poids;
+
+      return state.userWeighings[0].poids;
     }
   },
   plugins: [createPersistedState()],
