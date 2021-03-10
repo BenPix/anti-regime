@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/anti-regime-deploy/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/regime/' : '/',
   devServer: {
     disableHostCheck: true,
     port: 8080,
