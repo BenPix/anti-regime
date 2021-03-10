@@ -137,7 +137,7 @@
                   v-model="accountType"
                 >
                   <b-form-radio value="local">Local</b-form-radio>
-                  <b-form-radio value="remote">Externe</b-form-radio>
+                  <b-form-radio value="remote" disabled>Externe</b-form-radio>
                 </b-form-radio-group>
                 <small class="text-muted"
                   >Un compte local n'enregistre les données que localement, sur

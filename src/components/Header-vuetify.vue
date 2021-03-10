@@ -29,7 +29,12 @@
 
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="ml-3 text-decoration-none" to="/sign-out">
+            <v-btn
+              icon
+              class="ml-3 text-decoration-none"
+              to="/sign-out"
+              disabled
+            >
               <v-icon v-bind="attrs" v-on="on">mdi-logout</v-icon>
             </v-btn>
           </template>

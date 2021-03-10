@@ -136,51 +136,6 @@
       </b-card>
     </b-card-group>
 
-    <!-- a garder pour tester dans goal - le CARD 3 pourrait être le format des cards -->
-
-    <v-container v-if="!userData.goalIsDefined">
-      <v-row calign="center" justify="center">
-        <!-- CARD 1 -->
-        <v-col cols="12" md="4">
-          <router-link to="/weighing" class="text-decoration-none">
-            <v-card hover rounded="xl">
-              <v-card-title class="purple darken-3">
-                <v-icon dark size="50" class="ma-auto">
-                  mdi-weight-kilogram
-                </v-icon>
-              </v-card-title>
-              <v-card-text class="pa-5">
-                <h2 class="font-weight-light">Je me pèse</h2>
-              </v-card-text>
-            </v-card>
-          </router-link>
-        </v-col>
-        <!-- CARD 2 -->
-        <v-col cols="12" md="4">
-          <v-card hover rounded="xl">
-            <v-card-title class="purple laighten-2">
-              <v-icon dark size="50" class="ma-auto"> mdi-target </v-icon>
-            </v-card-title>
-            <v-card-text class="pa-5">
-              <h2 class="font-weight-light">Mon objectif</h2>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <!-- CARD 3 -->
-        <v-col cols="12" md="4">
-          <v-card height="70%">
-            <v-img
-              class="white--text align-end"
-              :src="require('@/assets/nice-card-bg.jpg')"
-              height="100px"
-            >
-              <v-card-title>Je me pèse</v-card-title>
-            </v-img>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-
     <!-- fin des 3 programmes de régime -->
 
     <GoalSynthese
